@@ -1,0 +1,32 @@
+description: Ultralytics best model trained on /kaggle/working/data.yaml
+author: Ultralytics
+date: '2025-03-27T12:59:33.881776'
+version: 8.3.97
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: Front-windscreen-damage
+  1: Headlight-damage
+  2: Rear-windscreen-Damage
+  3: Runningboard-Damage
+  4: Sidemirror-Damage
+  5: Taillight-Damage
+  6: bonnet-dent
+  7: boot-dent
+  8: doorouter-dent
+  9: fender-dent
+  10: front-bumper-dent
+  11: quaterpanel-dent
+  12: rear-bumper-dent
+  13: roof-dent
+args:
+  batch: 1
+  half: false
+  int8: false
+  nms: false
