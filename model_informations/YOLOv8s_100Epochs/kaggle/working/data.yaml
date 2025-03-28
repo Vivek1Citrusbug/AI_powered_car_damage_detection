@@ -1,0 +1,19 @@
+names:
+- Front-windscreen-damage
+- Headlight-damage
+- Rear-windscreen-Damage
+- Runningboard-Damage
+- Sidemirror-Damage
+- Taillight-Damage
+- bonnet-dent
+- boot-dent
+- doorouter-dent
+- fender-dent
+- front-bumper-dent
+- quaterpanel-dent
+- rear-bumper-dent
+- roof-dent
+nc: 14
+test: /kaggle/input/car-damage-detection-dataset/test
+train: /kaggle/input/car-damage-detection-dataset/train
+val: /kaggle/input/car-damage-detection-dataset/valid
