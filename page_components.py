@@ -5,7 +5,7 @@ def configure_ui():
     Set up the UI components
     """
 
-    st.set_page_config(page_title="AI-Powered CArd Damage Detection", layout="wide")
+    st.set_page_config(page_title="AI-Powered Car Damage Detection", layout="wide")
 
     st.markdown("""
         <style>
