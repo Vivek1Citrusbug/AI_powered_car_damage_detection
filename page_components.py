@@ -16,7 +16,7 @@ def configure_ui():
         """, unsafe_allow_html=True)
 
     st.markdown("<p class='title'>AI-Powered car dent and damage Detection</p>", unsafe_allow_html=True)
-    st.write("🚀 Upload multiple **images/videos**, and the app will detect **dent and damages**.")
+    st.write("🚀 Upload multiple **images**, and the app will detect **dent and damages**.")
 
 def get_sidebar_options():
     """
@@ -24,11 +24,13 @@ def get_sidebar_options():
     """
     
     st.sidebar.title("🔍 Select YOLOv8 Model")
-    model_choice = st.sidebar.selectbox("Choose a model", ["YOLOv8-medium", "YOLOv8-small", "YOLOv8-nano"])
+    model_choice = st.sidebar.selectbox("Choose a model", ["YOLOv8-medium", "YOLOv8-small"])
 
     st.sidebar.title("📤 Upload Images or Videos")
-    uploaded_files = st.sidebar.file_uploader("Upload multiple images/videos", type=["jpg", "jpeg", "png", "mp4"], accept_multiple_files=True)
+    uploaded_files = st.sidebar.file_uploader("Upload multiple images", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
     
-    use_webcam = st.sidebar.checkbox("📷 Enable Webcam for Live Detection")
+    # use_webcam = st.sidebar.checkbox("📷 Enable Webcam for Live Detection")
+    # for using webcam we can also return it as use_webcam
 
-    return model_choice, uploaded_files, use_webcam
+    return model_choice, uploaded_files
+

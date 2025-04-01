@@ -13,12 +13,38 @@ class PPEDetector:
 
         self.model = YOLO(model_path)
 
+    # def detect_objects(self, frame):
+    #     """
+    #     Detect PPE objects in an image frame
+    #     """
+
+    #     results = self.model(frame)
+    #     for result in results:
+    #         for box in result.boxes:
+    #             x1, y1, x2, y2 = map(int, box.xyxy[0])
+    #             conf = box.conf[0].item()
+    #             cls = int(box.cls[0].item())
+    #             label = f"{self.model.names[cls]}: {conf:.2f}"
+
+    #             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    #             cv2.putText(
+    #                 frame,
+    #                 label,
+    #                 (x1, y1 - 10),
+    #                 cv2.FONT_HERSHEY_SIMPLEX,
+    #                 0.4,
+    #                 (0, 255, 0),
+    #                 1,
+    #             )
+
+    #     return frame
+    
     def detect_objects(self, frame):
         """
-        Detect PPE objects in an image frame
+        Detect PPE objects in an image frame with improved text clarity.
         """
-
         results = self.model(frame)
+
         for result in results:
             for box in result.boxes:
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
@@ -26,16 +52,24 @@ class PPEDetector:
                 cls = int(box.cls[0].item())
                 label = f"{self.model.names[cls]}: {conf:.2f}"
 
+                # Draw bounding box
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(
-                    frame,
-                    label,
-                    (x1, y1 - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5,
-                    (0, 255, 0),
-                    2,
-                )
+
+                # Get text size
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                font_scale = 0.5
+                thickness = 1
+                text_size = cv2.getTextSize(label, font, font_scale, thickness)[0]
+                text_x, text_y = x1, y1 - 10
+
+                # Draw background rectangle for text
+                cv2.rectangle(frame, 
+                            (text_x, text_y - text_size[1] - 5), 
+                            (text_x + text_size[0] + 5, text_y + 5), 
+                            (0, 0, 0), -1)  # Black background
+
+                # Put text on top of the rectangle
+                cv2.putText(frame, label, (text_x, text_y), font, font_scale, (255, 255, 255), thickness)
 
         return frame
 

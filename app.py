@@ -13,7 +13,7 @@ MODEL_PATHS = {
     # "YOLOv8-nano": "models/Yolov8n_without_aug.pt",
 }
 SUPPORTED_IMAGE_FORMATS = {"jpg", "jpeg", "png"}
-SUPPORTED_VIDEO_FORMATS = {"mp4"}
+# SUPPORTED_VIDEO_FORMATS = {"mp4"}
 
 
 def main():
@@ -23,14 +23,14 @@ def main():
 
     configure_ui()
 
-    model_choice, uploaded_files, use_webcam = get_sidebar_options()
+    model_choice, uploaded_files = get_sidebar_options()
 
     detector = PPEDetector(MODEL_PATHS.get(model_choice, "YOLOv8-small"))
 
-    if use_webcam:
-        detector.process_webcam()
+    # if use_webcam:
+    #     detector.process_webcam()
 
-    elif uploaded_files:
+    if uploaded_files:
         for uploaded_file in uploaded_files:
             file_path = save_uploaded_file(uploaded_file)
             file_extension = file_path.suffix[1:].lower()
@@ -38,14 +38,14 @@ def main():
             if file_extension in SUPPORTED_IMAGE_FORMATS:
                 process_and_display_image(detector, file_path)
 
-            elif file_extension in SUPPORTED_VIDEO_FORMATS:
-                process_and_display_video(detector, file_path)
+            # elif file_extension in SUPPORTED_VIDEO_FORMATS:
+            #     process_and_display_video(detector, file_path)
 
             else:
                 st.warning(f"⚠️ Unsupported file format: {file_extension}")
 
     else:
-        st.info("📤 Upload images or videos for object detection.")
+        st.info("📤 Upload images for object detection.")
 
     st.sidebar.markdown("---")
     st.sidebar.info("👨‍💻 Developed with Streamlit & YOLOv8")
