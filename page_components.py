@@ -12,6 +12,12 @@ def configure_ui():
         .stApp { background-color: #f8f9fa; }
         .title { text-align: center; color: #4CAF50; font-size: 28px; font-weight: bold; }
         .sidebar .sidebar-content { background-color: #ffffff; }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            padding-left: 500px;
+            padding-right: 500px;
+        }
         </style>
         """, unsafe_allow_html=True)
 
@@ -28,9 +34,5 @@ def get_sidebar_options():
 
     st.sidebar.title("📤 Upload Images or Videos")
     uploaded_files = st.sidebar.file_uploader("Upload multiple images", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
-    
-    # use_webcam = st.sidebar.checkbox("📷 Enable Webcam for Live Detection")
-    # for using webcam we can also return it as use_webcam
-
     return model_choice, uploaded_files
 

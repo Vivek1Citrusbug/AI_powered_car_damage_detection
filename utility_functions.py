@@ -49,12 +49,10 @@ def process_and_display_image(detector: PPEDetector, image_path: Path):
     Process and display an image using the detector.
     """
 
-    image = Image.open(image_path)
     with st.spinner("🛠️ Processing Image..."):
         processed_image = detector.process_image(str(image_path))
         processed_image = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
-    st.image(processed_image, caption="🔍 Processed Image", use_container_width=True)
-
+        return processed_image
 
 def process_and_display_video(detector: PPEDetector, video_path: Path):
     """
