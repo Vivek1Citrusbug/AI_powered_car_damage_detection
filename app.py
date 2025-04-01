@@ -8,8 +8,8 @@ from utility_functions import (
 )
 
 MODEL_PATHS = {
-    "YOLOv8-medium": "models/YOLOv8s_100Epochs.pt"
-    # "YOLOv8-small": "models/Yolov8s_without_aug.pt",
+    "YOLOv8-small": "models/YOLOv8s_100Epochs.pt",
+    "YOLOv8-medium": "models/YOLOv8m_100Epochs.pt",
     # "YOLOv8-nano": "models/Yolov8n_without_aug.pt",
 }
 SUPPORTED_IMAGE_FORMATS = {"jpg", "jpeg", "png"}
