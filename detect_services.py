@@ -5,13 +5,32 @@ from ultralytics import YOLO
 import streamlit as st
 import ffmpeg as ff
 
+
 class PPEDetector:
+
     def __init__(self, model_path):
         """
         Initialize the PPE Detector with a given YOLO model
         """
 
         self.model = YOLO(model_path)
+        self.available_classes = [
+            "Front-windscreen-damage",
+            "Headlight-damage",
+            "Rear-windscreen-damage",
+            "Runningboard-damage",
+            "Sidemirror-damage",
+            "Taillight-damage",
+            "Bonnet-damage",
+            "Boot-damage",
+            "Doorouter-damage",
+            "Fender-damage",
+            "Front-bumper-damage",
+            "Quaterpanel-damage",
+            "Rear-bumper-damage",
+            "Roof-damage",
+            # "Wheel-damaged"
+        ]
 
     def detect_objects(self, frame):
         """
@@ -24,17 +43,43 @@ class PPEDetector:
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 conf = box.conf[0].item()
                 cls = int(box.cls[0].item())
-                label = f"{self.model.names[cls]}: {conf:.2f}"
+                label = f"{self.available_classes[cls]}: {conf:.2f}"
 
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                # cv2.putText(
+                #     frame,
+                #     label,
+                #     (x1, y1 - 10),
+                #     cv2.FONT_HERSHEY_SIMPLEX,
+                #     0.7,
+                #     (0, 255, 0),
+                #     1,
+                # )
+
+                text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)[0]
+                print(text_size)
+                cv2.rectangle(
+                    frame,
+                    (x1, y1 - text_size[1] - 5),
+                    (x1 + text_size[0] + 5, y1),
+                    (0, 0, 0),
+                    -1,
+                )
+                cv2.rectangle(
+                    frame,
+                    (x1, y1 - text_size[1] - 5),
+                    (x1 + text_size[0] + 5, y1),
+                    (0, 255, 0),
+                    1,
+                )
                 cv2.putText(
                     frame,
                     label,
-                    (x1, y1 - 10),
+                    (x1, y1 - 5),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
-                    (0, 255, 0),
-                    2,
+                    (255, 255, 255),
+                    1,
                 )
 
         return frame
@@ -53,10 +98,7 @@ class PPEDetector:
         """
 
         cap = cv2.VideoCapture(video_path)
-        # avc1 - No error 
-        # cv2.VideoWriter_
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        # fourcc = -1
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         fps = int(cap.get(cv2.CAP_PROP_FPS))
         width, height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(
             cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
@@ -85,6 +127,7 @@ class PPEDetector:
 
         cap.release()
         out.release()
+        
         return output_path
 
     def process_webcam(self):
