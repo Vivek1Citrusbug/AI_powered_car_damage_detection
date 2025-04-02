@@ -32,54 +32,69 @@ class PPEDetector:
             # "Wheel-damaged"
         ]
 
+
     def detect_objects(self, frame):
         """
-        Detect PPE objects in an image frame
+        Detect PPE objects in an image frame and annotate them with bounding boxes and labels.
         """
 
         results = self.model(frame)
+        img_height, img_width = frame.shape[:2]
+
+        text_positions = []
+
         for result in results:
             for box in result.boxes:
+
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 conf = box.conf[0].item()
                 cls = int(box.cls[0].item())
                 label = f"{self.available_classes[cls]}: {conf:.2f}"
 
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                # cv2.putText(
-                #     frame,
-                #     label,
-                #     (x1, y1 - 10),
-                #     cv2.FONT_HERSHEY_SIMPLEX,
-                #     0.7,
-                #     (0, 255, 0),
-                #     1,
-                # )
 
-                text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)[0]
-                print(text_size)
+                text_size, baseline = cv2.getTextSize(
+                    label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1
+                )
+                text_width, text_height = text_size
+
+                text_x = x1
+                text_y = y1 - 10
+
+                if text_y < text_height:
+                    text_y = y1 + text_height + 10
+                if text_x + text_width > img_width:
+                    text_x = img_width - text_width - 10
+
+                for prev_x, prev_y, prev_w, prev_h in text_positions:
+                    if (
+                        text_x < prev_x + prev_w
+                        and text_x + text_width > prev_x
+                        and text_y < prev_y + prev_h
+                        and text_y + text_height > prev_y
+                    ):
+                        text_y = prev_y + prev_h + 5
+
                 cv2.rectangle(
                     frame,
-                    (x1, y1 - text_size[1] - 5),
-                    (x1 + text_size[0] + 5, y1),
+                    (text_x, text_y - text_height),
+                    (text_x + text_width, text_y + baseline),
                     (0, 0, 0),
                     -1,
                 )
-                cv2.rectangle(
-                    frame,
-                    (x1, y1 - text_size[1] - 5),
-                    (x1 + text_size[0] + 5, y1),
-                    (0, 255, 0),
-                    1,
-                )
+
                 cv2.putText(
                     frame,
                     label,
-                    (x1, y1 - 5),
+                    (text_x, text_y),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
                     (255, 255, 255),
                     1,
+                )
+
+                text_positions.append(
+                    (text_x, text_y - text_height, text_width, text_height + baseline)
                 )
 
         return frame
@@ -127,7 +142,7 @@ class PPEDetector:
 
         cap.release()
         out.release()
-        
+
         return output_path
 
     def process_webcam(self):
